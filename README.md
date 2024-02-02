@@ -4,7 +4,7 @@ bech32kt is a Kotlin implementation of the [Bech32](https://en.bitcoin.it/wiki/B
 The implementation is heavily based on [Bitcoinj Bech32 implementation](https://github.com/bitcoinj/bitcoinj/blob/master/core/src/main/java/org/bitcoinj/core/Bech32.java).
 
 # Downloading
-This library is available on Jitpack: [![](https://jitpack.io/v/chainpilots/identicon-compose.svg)](https://jitpack.io/#chainpilots/bech32kt)
+This library is available on Jitpack: [![](https://jitpack.io/v/chainpilots/bech32kt.svg)](https://jitpack.io/#chainpilots/bech32kt)
 
 In order to download it, firstly include the Jitpack repository on your project `build.gradle.kts` file:
 
