@@ -1,20 +1,18 @@
 package com.chainpilots.bech32kt
 
-import com.chainpilots.bech32kt.Constants.BECH32_CONST
-
 /**
- * Object to encode and decode Bech32.
+ * Object to encode and decode Bech32M.
  */
-object Bech32 {
+object Bech32M {
     /**
-     * Encode a Bech32 string.
+     * Encode a Bech32M string.
      *
      * @param hrp The requested human-readable part
      * @param words Binary data (in 5-bit per byte format): call [toWords] first.
-     * @return A string containing the Bech32-encoded data
+     * @return A string containing the Bech32M-encoded data
      */
     fun encode(hrp: String, words: ByteArray, limit: Int? = null): String {
-        return encode(BECH32_CONST, hrp, words, limit)
+        return encode(Constants.BECH32M_CONST, hrp, words, limit)
     }
     /**
      * Decode a Bech32M string.

@@ -1,15 +1,13 @@
 package com.chainpilots.bech32kt
 
-import com.chainpilots.bech32kt.Bech32.decode
-import com.chainpilots.bech32kt.Bech32.decodeBytes
-import com.chainpilots.bech32kt.Bech32.encodeBytes
 import com.chainpilots.bech32kt.AddressFormatException.*
+import com.chainpilots.bech32kt.Constants.BECH32M_CONST
+import com.chainpilots.bech32kt.Constants.BECH32_CONST
 import org.junit.jupiter.api.Test
 import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
 import kotlin.test.assertFailsWith
-
 
 class Bech32Test{
     private val VALID_BECH32 = arrayOf(
@@ -33,23 +31,31 @@ class Bech32Test{
     @Test
     fun validBech32() {
         for (valid in VALID_BECH32) {
-            valid(valid)
+            valid(valid, BECH32_CONST)
         }
     }
 
     @Test
     fun validBech32m() {
         for (valid in VALID_BECH32M) {
-            valid(valid)
+            valid(valid, BECH32M_CONST)
         }
     }
 
-    private fun valid(valid: String) {
-        val bechData = Bech32.decode(valid)
-        var recode = Bech32.encode(bechData)
+    private fun valid(valid: String, encoding: Int) {
+        var bechData: Bech32Data = Bech32Data("", byteArrayOf())
+        var recode: String = ""
+        if (encoding == BECH32_CONST) {
+            bechData = Bech32.decode(valid)
+            recode = Bech32.encode(bechData.hrp, bechData.data)
+        }
+        if (encoding == BECH32M_CONST) {
+            bechData = Bech32M.decode(valid)
+            recode = Bech32M.encode(bechData.hrp, bechData.data)
+        }
         assertEquals(valid.lowercase(Locale.ROOT), recode.lowercase(Locale.ROOT),"Failed to roundtrip '$valid' -> '$recode'" )
         // Test encoding with an uppercase HRP
-        recode = Bech32.encode(bechData.encoding, bechData.hrp.uppercase(Locale.ROOT), bechData)
+        recode = encode(encoding, bechData.hrp.uppercase(Locale.ROOT), bechData.data, null)
         assertEquals(valid.lowercase(Locale.ROOT), recode.lowercase(Locale.ROOT), "Failed to roundtrip '$valid' -> '$recode'")
     }
 
@@ -97,7 +103,7 @@ class Bech32Test{
 
     private fun invalid(invalid: String) {
         try {
-            decode(invalid)
+            decode(invalid, null)
             assertFails { invalid(invalid) }
         } catch (x: AddressFormatException) {
             /* expected */
@@ -109,10 +115,9 @@ class Bech32Test{
     fun encodeBytes() {
         val vectors = nip19Vectors()
         for (i in vectors.indices) {
-            val bech32 = encodeBytes(Bech32.Encoding.BECH32, vectors[i][1], vectors[i][0].hexToByteArray())
+            val bech32 = Bech32.encode(vectors[i][1], vectors[i][0].hexToByteArray().toWords())
             assertEquals(vectors[i][2], bech32, "incorrect encoding")
         }
-
     }
 
     @OptIn(ExperimentalStdlibApi::class)
@@ -120,9 +125,8 @@ class Bech32Test{
     fun decodeBytes() {
         val vectors = nip19Vectors()
         for (i in vectors.indices) {
-            val decoded = decode(vectors[i][2])
-            val decodedData = decoded.decode5to8().toHexString()
-            assertEquals(Bech32.Encoding.BECH32, decoded.encoding, "incorrect encoding type")
+            val decoded = Bech32.decode(vectors[i][2])
+            val decodedData = decoded.data.fromWords().toHexString()
             assertEquals(vectors[i][1], decoded.hrp, "incorrect hrp")
             assertEquals(vectors[i][0], decodedData, "incorrect decoded data")
         }
@@ -133,8 +137,8 @@ class Bech32Test{
     fun decodeBytes2() {
         val vectors = nip19Vectors()
         for (i in vectors.indices) {
-            val decoded = decodeBytes(vectors[i][2], vectors[i][1], Bech32.Encoding.BECH32)
-            assertEquals(vectors[i][0], decoded.toHexString(), "incorrect decoded data")
+            val decoded = Bech32.decode(vectors[i][2])
+            assertEquals(vectors[i][0], decoded.data.fromWords().toHexString(), "incorrect decoded data")
         }
     }
 
@@ -161,21 +165,21 @@ class Bech32Test{
 
     @Test
     fun decode_invalidCharacter_notInAlphabet() {
-        assertFailsWith<InvalidCharacter> { decode("A12OUEL5X") }
+        assertFailsWith<InvalidCharacter> { Bech32.decode("A12OUEL5X") }
     }
 
     @Test
     fun decode_invalidCharacter_upperLowerMix() {
-        assertFailsWith<InvalidCharacter> { decode("A12UeL5X") }
+        assertFailsWith<InvalidCharacter> {  Bech32.decode("A12UeL5X") }
     }
 
     @Test
     fun decode_invalidNetwork() {
-        assertFailsWith<InvalidChecksum> { decode("A12UEL5X") }
+        assertFailsWith<InvalidChecksum> {  Bech32.decode("A12UEL5X") }
     }
 
     @Test
     fun decode_invalidHrp() {
-        assertFailsWith<InvalidPrefix> { decode("1pzry9x0s0muk") }
+        assertFailsWith<InvalidPrefix> {  Bech32.decode("1pzry9x0s0muk") }
     }
 }
