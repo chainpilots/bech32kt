@@ -11,22 +11,22 @@ fun ByteArray.encodeToBech32(hrp: String, limit: Int? = null): String =
     Bech32.encode(hrp, this.toWords(), limit)
 
 /**
- * Extension to decode a String to [Bech32Data].
- *
- * @param limit Limitation of ByteArray length.
- * @return [Bech32Data] in 5-bit byte format with human-readable part (HRP) information.
- */
-fun String.decodeBech32ToBech32Data(limit: Int? = null): Bech32Data = Bech32.decode(this, limit)
-
-/**
- * Extension to encode a ByteArray to a Bech32M string with internal [toWords] call.
+ * Extension to encode a ByteArray to a Bech32M string.
  *
  * @param hrp The requested human-readable part
  * @param limit Limitation of ByteArray length.
  * @return A string containing the Bech32-encoded data
  */
 fun ByteArray.encodeToBech32m(hrp: String, limit: Int? = null): String =
-    Bech32M.encode(hrp, this.toWords(), limit)
+    Bech32M.encode(hrp, this, limit)
+
+/**
+ * Extension to decode a Bech32-String to [Bech32Data].
+ *
+ * @param limit Limitation of ByteArray length.
+ * @return [Bech32Data] in 5-bit byte format with human-readable part (HRP) information.
+ */
+fun String.decodeBech32ToBech32Data(limit: Int? = null): Bech32Data = Bech32.decode(this, limit)
 
 /**
  * Extension to decode a String to a [Bech32Data].

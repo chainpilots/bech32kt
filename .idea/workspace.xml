@@ -5,18 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fcf22af8-6537-4f23-b170-c3bad3d0bbc3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/com/chainpilots/bech32kt/Bech32Data.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/com/chainpilots/bech32kt/Bech32Extensions.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/com/chainpilots/bech32kt/Bech32M.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/com/chainpilots/bech32kt/Constants.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/com/chainpilots/bech32kt/utils.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/chainpilots/bech32kt/AddressFormatException.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/chainpilots/bech32kt/AddressFormatException.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/chainpilots/bech32kt/Bech32.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/chainpilots/bech32kt/Bech32.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/com/chainpilots/bech32kt/Bech32Test.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/com/chainpilots/bech32kt/Bech32Test.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

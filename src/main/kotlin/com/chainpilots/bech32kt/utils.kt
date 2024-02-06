@@ -38,8 +38,8 @@ private fun expandHrp(hrp: String): ByteArray {
 private fun verifyChecksum(hrp: String, values: ByteArray): Int? {
     val hrpExpanded = expandHrp(hrp)
     val combined = ByteArray(hrpExpanded.size + values.size)
-    System.arraycopy(hrpExpanded, 0, combined, 0, hrpExpanded.size)
-    System.arraycopy(values, 0, combined, hrpExpanded.size, values.size)
+    hrpExpanded.copyInto(combined, 0, 0, hrpExpanded.size)
+    values.copyInto(combined, hrpExpanded.size, 0, values.size)
     val check = polymod(combined)
     return if (check != BECH32_CONST && check != BECH32M_CONST) null else check
 }
@@ -48,8 +48,8 @@ private fun verifyChecksum(hrp: String, values: ByteArray): Int? {
 private fun createChecksum(encoding: Int, hrp: String, values: ByteArray): ByteArray {
     val hrpExpanded = expandHrp(hrp)
     val enc = ByteArray(hrpExpanded.size + values.size + 6)
-    System.arraycopy(hrpExpanded, 0, enc, 0, hrpExpanded.size)
-    System.arraycopy(values, 0, enc, hrpExpanded.size, values.size)
+    hrpExpanded.copyInto(enc, 0, 0, hrpExpanded.size)
+    values.copyInto(enc, hrpExpanded.size, 0, values.size)
     val mod = polymod(enc) xor (if (encoding == BECH32_CONST) BECH32_CONST else BECH32M_CONST)
     val ret = ByteArray(6)
     for (i in 0..5) {
@@ -73,8 +73,8 @@ internal fun encode(encoding: Int, hrp: String, values: ByteArray, limit: Int?):
     val lcHrp = hrp.lowercase()
     val checksum = createChecksum(encoding, lcHrp, values)
     val combined = ByteArray(values.size + checksum.size)
-    System.arraycopy(values, 0, combined, 0, values.size)
-    System.arraycopy(checksum, 0, combined, values.size, checksum.size)
+    values.copyInto(combined, 0, 0, values.size)
+    checksum.copyInto(combined, values.size, 0, checksum.size)
     val sb = StringBuilder(lcHrp.length + 1 + combined.size)
     sb.append(lcHrp)
     sb.append('1')
@@ -118,9 +118,9 @@ internal fun decode(str: String, limit: Int?): Bech32Data {
     if (dataPartLength < 6) throw AddressFormatException.InvalidDataLength("Data part too short: $dataPartLength")
     val values = ByteArray(dataPartLength)
     for (i in 0 until dataPartLength) {
-        val c = str[i + pos + 1]
-        if (CHARSET_REV[c.code].toInt() == -1) throw AddressFormatException.InvalidCharacter(c, i + pos + 1)
-        values[i] = CHARSET_REV[c.code]
+        val c = str[i + pos + 1].code
+        if (CHARSET_REV[c].toInt() == -1) throw AddressFormatException.InvalidCharacter(c.toChar(), i + pos + 1)
+        values[i] = CHARSET_REV[c]
     }
     val hrp = str.substring(0, pos).lowercase()
     verifyChecksum(hrp, values) ?: throw AddressFormatException.InvalidChecksum()
@@ -143,9 +143,7 @@ internal fun convertBits(
     for (i in 0 until inLen) {
         val value = input[i].toInt() and 0xff
         if ((value ushr fromBits) != 0) {
-            throw AddressFormatException(
-                String.format("Input value '%X' exceeds '%d' bit size", value, fromBits)
-            )
+            throw AddressFormatException("Input value '$value' exceeds '$fromBits' bit size")
         }
         acc = ((acc shl fromBits) or value) and maxAcc
         bits += fromBits
@@ -157,7 +155,7 @@ internal fun convertBits(
     if (pad) {
         if (bits > 0) out.write((acc shl (toBits - bits)) and max)
     } else if (bits >= fromBits || ((acc shl (toBits - bits)) and max) != 0) {
-        throw AddressFormatException("Could not convert bits, invalid padding")
+        throw AddressFormatException("Could not convert bits, invalid padding ${((acc shl (toBits - bits)) and max)}")
     }
     return out.toByteArray()
 }

@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.chainpilots"
-version = "0.1.0"
+version = "0.2.0"
 
 repositories {
     mavenCentral()
@@ -28,7 +28,7 @@ afterEvaluate {
             create<MavenPublication>("bech32kt") {
                 groupId = "com.chainpilots"
                 artifactId = "bech32kt"
-                version = "0.1.0"
+                version = "0.2.0"
 
                 from(components["java"])
             }

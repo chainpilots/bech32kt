@@ -18,24 +18,31 @@ allprojects {
 
 Then, insert the following dependency inside your module's `build.gradle.kts` file:
 
-```groovy 
+```kts 
 dependencies {
-    implementation 'com.github.chainpilots:bech32kt:{version}'
+    implementation("com.github.chainpilots:bech32kt:{version}")
 }
 ```
 
 # Usage
+
 ```kotlin
 // Encode given a human-readable part and a byte array
-val encoded = Bech32.encode(hrp = "bc", data = byteArrayOf(1, 2 ,3))
+val bech32 = Bech32.encode(hrp = "bc", data = byteArrayOf(1, 2 ,3).toWords())
+val bech32m = Bech32M.encode(hrp = "bc", data = byteArrayOf(1, 2 ,3).toWords())
 
-// Encode by wrapping the data into a Bech32Data object
-val data = Bech32Data(
-  humanReadablePart = "bc",
-  data = byteArrayOf(1, 2, 3)
-)
+// Encode given a human-readable part and a byte array with extension
+val bech32 = byteArrayOf(1, 2 ,3).encodeToBech32(hrp = "bc")
+val bech32m = byteArrayOf(1, 2 ,3).encodeToBechm32(hrp = "bc")
 
 // Decode the data
 val bech32Value = "abcdef1qpzry9x8gf2tvdw0s3jn54khce6mua7lmqqqxw"
 val (hrp, data) = Bech32.decode(bech32Value)
+
+val bech32mValue = "abcdef1qpzry9x8gf2tvdw0s3jn54khce6mua7lmqqqxw"
+val (hrp, data) = Bech32M.decode(bech32Value)
+
+// Decode the data with extension
+val bech32Value = "abcdef1qpzry9x8gf2tvdw0s3jn54khce6mua7lmqqqxw"
+val (hrp, data) = bech32Value.decodeBech32ToBech32Data()
 ```
